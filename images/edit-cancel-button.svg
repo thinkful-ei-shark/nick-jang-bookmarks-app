@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <line x1="192.401" x2="301.124" y1="310.423" y2="201.701" fill="none" stroke="#000000" stroke-linecap="round" stroke-miterlimit="10" style="stroke-width: 21px;"/>
+  <line x1="192.401" x2="301.124" y1="201.701" y2="310.423" fill="none" stroke="#000000" stroke-linecap="round" stroke-miterlimit="10" style="stroke-width: 21px;"/>
+  <path stroke-miterlimit="10" d="M 246.705 77.693 C 150.239 77.693 72.032 155.897 72.032 252.365 C 72.032 348.831 150.239 427.037 246.705 427.037 C 343.173 427.037 421.379 348.831 421.379 252.365 C 421.379 155.897 343.173 77.693 246.705 77.693 Z" style="fill: none; stroke: rgb(0, 0, 0); stroke-width: 21px;"/>
+</svg>

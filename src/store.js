@@ -1,5 +1,5 @@
 const bookmarks = []; // {id: '', title: '', rating: 0, url: '', description: '', expanded: false, edits: {}}
-const adding = [];    // { Same as above } Save adding data to rerender on changes to store
+const adding = [];    // { Same as above without expanded and edits} Save adding data to rerender on changes to store
 let error = null;     // Errors from API
 let filter = 0;       // Filter results by minimum rating
 
@@ -14,8 +14,10 @@ const findById = function (id, type) {
   return foundBookmark;
 };
 
-const addBookmark = function (bookmark) {
-  findAndDelete(bookmark.id, 'adding');
+const addBookmark = function (tentativeId, bookmark) {
+  findAndDelete(tentativeId, 'adding');
+  bookmark.expanded = false;
+  bookmark.edit = {};
   this.bookmarks.push(bookmark);
 };
 
@@ -53,8 +55,14 @@ const saveTentativeData = function (type, data) {
       this.adding.push(data);
     }
   } else if (type === 'bookmark') {
-    Object.assign(bookmark, data);
+    Object.assign(bookmark.edits, data);
   }
+};
+
+const addTentativeBookmark = function (data) {
+  let newBookmark = data;
+  newBookmark.id = cuid();
+  adding.push(newBookmark);
 };
 
 const setError = function (e) {
@@ -67,6 +75,9 @@ const resetError = function () {
 };
 
 export default {
+  bookmarks,
+  adding,
+  filter,
   findById,
   addBookmark,
   findAndUpdate,
@@ -74,6 +85,7 @@ export default {
   setFilter,
   toggleEditting,
   saveTentativeData,
+  addTentativeBookmark,
   setError,
   resetError
 };

@@ -8,12 +8,12 @@ import './index.css';
 
 const main = function () {
   //error handling; is this request still need?---------------------
-  // bind and add bookmarks.onload() to bindeventlisteners instead
-  api.getItems()
+  // ^ bind and add bookmarks.onload(api.getItems()) to bindeventlisteners instead
+  /**api.getItems()
     .then((data) => {
       data.forEach((bookmark) => store.addBookmark(bookmark));
       bookmarks.render();
-    });
+    });*/
 
   bookmarks.bindEventListeners();
   bookmarks.render();
