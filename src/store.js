@@ -1,9 +1,10 @@
 import cuid from 'cuid';
 
-const bookmarks = []; // {id: '', title: '', rating: 0, url: '', description: '', expanded: false, edits: {}}
-const adding = [];    // { Same as above without expanded and edits} Save adding data to rerender on changes to store
-let error = null;     // Errors from API
+let bookmarks = []; // {id: '', title: '', rating: 0, url: '', desc: '', expanded: false, selected: false, edits: {}}
+let adding = [];    // { Same as above without expanded and edits} Save adding data to rerender on changes to store
+let error = {code:'', message:''};     // Errors from API
 let filter = 0;       // Filter results by minimum rating
+let selectAll = false;
 
 const findById = function (id, type) {
   let foundBookmark = {};
@@ -17,7 +18,7 @@ const findById = function (id, type) {
 };
 
 const addBookmark = function (tentativeId, bookmark) {
-  findAndDelete(tentativeId, 'adding');
+  if (tentativeId) findAndDelete(tentativeId, 'adding');
   bookmark.expanded = false;
   bookmark.edits = {};
   bookmarks.push(bookmark);
@@ -32,18 +33,10 @@ const findAndUpdate = function (id, updates) {
 
 const findAndDelete = function (id, type) {
   if (type === 'bookmark') {
-    bookmarks.forEach((bookmark, index) => {
-      if (bookmark.id === id) delete bookmarks[index];
-    });
+    bookmarks = bookmarks.filter(bookmark => bookmark.id !== id);
   } else {
-    adding.forEach((bookmark, index) => {
-      if (bookmark.id === id) delete adding[index];
-    });
+    adding = adding.filter(bookmark => bookmark.id !== id);
   }
-};
-
-const setFilter = function (num) {
-  this.filter = num;
 };
 
 const toggleEditting = function (id) {
@@ -51,7 +44,6 @@ const toggleEditting = function (id) {
   if (Object.keys(bookmark.edits).length) {
     bookmark.edits = {};
   } else {
-    console.log('edit start', bookmarks[0].edits);
     bookmark.edits = {
       id: bookmark.id,
       title: bookmark.title,
@@ -59,8 +51,17 @@ const toggleEditting = function (id) {
       desc: bookmark.desc
     };
     bookmark.expanded = true;
-    console.log('edit end', bookmarks[0].expanded);
   }
+};
+
+const toggleSelected = function (id) {
+  let bookmark = findById(id, 'bookmark');
+  bookmark.selected = !bookmark.selected;
+};
+
+const toggleSelectAll = function () {
+  selectAll = !selectAll;
+  bookmarks.forEach(bookmark => bookmark.selected = selectAll);
 };
 
 const saveTentativeData = function (type, data) {
@@ -82,7 +83,7 @@ const addTentativeBookmark = function () {
     title: '',
     rating: 0,
     url: '',
-    description: ''
+    desc: ''
   };
   adding.push(newBookmark);
 };
@@ -92,22 +93,63 @@ const setError = function (e) {
 };
 
 const resetError = function () {
-  this.error.code = '';
-  this.error.message = '';
+  error.code = '';
+  error.message = '';
+};
+
+const getBookmarks = function () {
+  return bookmarks;
+};
+
+const getAdding = function () {
+  return adding;
+};
+
+const getFilter = function () {
+  return filter;
+};
+
+const getError = function () {
+  return error;
+};
+
+const getSelectAll = function () {
+  return selectAll;
+};
+
+const setFilter = function (fil) {
+  filter = fil;
+};
+
+const setRating = function (id, headerType, rat) {
+  let type = headerType;
+  if (headerType === 'edit') type = 'bookmark';
+  let bookmark = findById(id, type);
+
+  if (headerType === 'edit') { 
+    bookmark.edits.rating = rat; 
+  } else {
+    bookmark.rating = rat;
+  }
 };
 
 export default {
-  bookmarks,
-  adding,
-  filter,
   findById,
   addBookmark,
   findAndUpdate,
   findAndDelete,
-  setFilter,
   toggleEditting,
+  toggleSelected,
+  toggleSelectAll,
   saveTentativeData,
   addTentativeBookmark,
   setError,
-  resetError
+  resetError,
+  getBookmarks,
+  getAdding,
+  getFilter,
+  getError,
+  getSelectAll,
+  setFilter,
+  setRating,
 };
