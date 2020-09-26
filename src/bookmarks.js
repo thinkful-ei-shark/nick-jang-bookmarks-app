@@ -3,7 +3,10 @@ import api from './api';
 import store from './store';
 import cuid from 'cuid';
 
-//import images;
+import deleteButton from '../images/delete-button.svg';
+import editButton from '../images/edit-button.svg';
+import editSubmitButton from '../images/edit-submit-button.svg';
+import editCancelButton from '../images/edit-cancel-button.svg';
 
 // Allow serializeJson on any jQuery object
 $.fn.extend({
@@ -41,10 +44,11 @@ const generateButton = function (type, version) {
     if (!parseType[1]) {
       classes = 'class="edit-button edit-start-button js-edit-button item"';
       editAlt = alt.edit;
-      img = '../images/edit-button.svg';
+      img = editButton;
     } else {
       classes = `class="edit-button edit-${parseType[1]}-button js-edit-${parseType[1]}-button item"`;
-      img = `../images/edit-${parseType[1]}-button.svg`;
+      if (parseType[1] === 'submit') img = editSubmitButton;
+      if (parseType[1] === 'cancel') img = editCancelButton;
       if (parseType[1] === 'submit') {
         if (version === 'bookmark') editAlt = alt.editSubmit;
         if (version === 'new-bookmark') editAlt = alt.editSubmitNew;
@@ -63,7 +67,7 @@ const generateButton = function (type, version) {
     if (version === 'action-bar') deleteAlt = alt.deleteMultiple;
 
     classes = 'class="delete-button js-delete-button item"';
-    innerHTML = `<img src="../images/delete-button.svg" alt="${deleteAlt}" class="delete">`;
+    innerHTML = `<img src="${deleteButton}" alt="${deleteAlt}" class="delete">`;
     // Create star button
   } else if (parseType[0] === 'star') {
     let id = cuid();

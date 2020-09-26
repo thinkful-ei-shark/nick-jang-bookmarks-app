@@ -3,7 +3,6 @@ import api from './api';
 import store from './store';
 import bookmarks from './bookmarks';
 
-//import 'normalize.css'; //<---------where is this located?
 import './index.css';
 
 const main = function () {
