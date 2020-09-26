@@ -1,13 +1,9 @@
 description... between title and stars (d)
-hold and swipe to delete or double tap trash can (m)
-hover get delete on side (d)
-display trash can, minimize, and edit (pencil) on expanded (both)
+hover get edit and delete on side (d)
 hover to change star rating preview (d)
-edit stars on expanded (both)
 scroll bar in box on expanded, set expanded height (both)
 hover shows title is link (d)
 stars are below visit site button (m)
-
-new bookmark and edit book mark have similar ui (m)
 edit title, description, and stars in place (d)
 
+images
