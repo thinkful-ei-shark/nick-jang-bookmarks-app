@@ -1,3 +1,4 @@
+@import url(https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css);
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
 * {
@@ -60,6 +61,11 @@ input.title {
 
 .description {
   height: 100px;
+  overflow: auto;
+}
+
+p.description {
+  white-space: pre-line;
 }
 
 .stars {
@@ -72,6 +78,7 @@ input.title {
   border: 0px;
   padding: 0px;
   height: fit-content;
+  background-color: transparent;
 }
 
 .star-button,
@@ -137,7 +144,56 @@ input.title {
 .preview {
   overflow-x: hidden;
   text-align: center;
+  height: 24px;
   display: none;
+}
+
+.star {
+  background-image: url(../images/star-button.svg);
+}
+
+.star-colored {
+  background-image: url(../images/star-select-button.svg);
+}
+
+.star:hover {
+  background-image: url(../images/star-hover-button.svg);
+}
+
+.star:active {
+  background-image: url(../images/star-active-button.svg);
+}
+
+.edit-start-button:hover img{
+  content: url(../images/edit-hover-button.svg);
+}
+
+.edit-start-button:active img{
+  content: url(../images/edit-active-button.svg);
+}
+
+.edit-submit-button:hover img{
+  content: url(../images/edit-submit-hover-button.svg);
+}
+
+.edit-submit-button:active img{
+  content: url(../images/edit-submit-active-button.svg);
+}
+
+.edit-cancel-button:hover img{
+  content: url(../images/edit-cancel-hover-button.svg);
+}
+
+.edit-cancel-button:active img{
+  content: url(../images/edit-cancel-active-button.svg);
+}
+
+.delete-button:hover img{
+  content: url(../images/delete-hover-button.svg);
+}
+
+.delete-button:active img{
+  content: url(../images/delete-active-button.svg);
 }
 
 .hidden {
