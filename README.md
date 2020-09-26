@@ -1,0 +1,12 @@
+# nick-jang-bookmarks-app
+A bookmark application to create, view, edit, and rate bookmarks. An exercise on asynchronous web applications.
+
+description... between title and stars (d)
+hover get edit and delete on side (d)
+hover to change star rating preview (d)
+scroll bar in box on expanded, set expanded height (both)
+hover shows title is link (d)
+stars are below visit site button (m)
+edit title, description, and stars in place (d)
+
+images
