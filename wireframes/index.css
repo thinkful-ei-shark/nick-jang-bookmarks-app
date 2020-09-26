@@ -137,7 +137,6 @@ input.title {
 .preview {
   overflow-x: hidden;
   text-align: center;
-  display: none;
 }
 
 .hidden {
@@ -183,6 +182,6 @@ select:focus #label-option {
 
 @media all and (min-width: 800px) {
   .preview {
-    display: flex;
+    display: none;
   }
 }

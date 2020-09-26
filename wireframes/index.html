@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+  <header>
+    <h1>Bookmarks</h1>
+  </header>
+  <main>
+    <!--New Bookmarks Section-->
+    <section id="new-bookmarks">
+      <!--Actions-->
+      <div class="group-row">
+        <h2 class="item">Bookmarks you're adding:</h2>
+        <button class="create-button js-create-button">New</button>
+        <!--new bookmark button hidden when no new bookmarks are being created-->
+      </div>
+      <!--New Bookmarks-->
+      <form id="1" class="bookmark-wrapper js-new-bookmark">
+        <div class="bookmark-header group-row">
+          <div class="title-text-box group-row">
+            <label for="new-title-1">Title:</label>
+            <input type="text" name="new-title" id="new-title-1" class="title item">
+          </div>
+          <div class="stars group-row">
+            <div class="star-button js-star-one item">
+              <input type="radio" id="star" name="gender" value="male" class="hidden">
+              <label for="star" class="hidden">Male</label>
+              <img src="../images/star-button.svg" alt="One star rating." class="star">
+            </div>
+            <button class="js-star-two item"><img src="../images/star-button.svg" alt="Two star rating."
+                class="star"></button>
+            <button class="js-star-three item"><img src="../images/star-button.svg" alt="Three star rating."
+                class="star"></button>
+            <button class="js-star-four item"><img src="../images/star-button.svg" alt="Four star rating."
+                class="star"></button>
+            <button class="js-star-five item"><img src="../images/star-button.svg" alt="Five star rating."
+                class="star"></button>
+          </div>
+        </div>
+        <div class="bookmark-expanded">
+          <div class="url group-row">
+            <label for="new-url-1">URL:</label>
+            <input type="text" name="new-url" id="new-url-1" placeholder="https://_______.___">
+          </div>
+          <div class="description group-row">
+            <label for="new-description-1" class="hidden">Enter a description:</label>
+            <textarea id="new-description-1" name="new-description-1"
+              placeholder="You can enter a description here."></textarea>
+          </div>
+          <div class="submit-cancel group-row">
+            <button class="edit-button js-edit-submit-button item"><img src="../images/edit-submit-button.svg"
+                alt="An image of a checkmark that adds the new bookmark." class="edit"></button>
+            <button class="edit-button js-edit-cancel-button item"><img src="../images/edit-cancel-button.svg"
+                alt="An image of an x that cancels the new bookmark." class="edit"></button>
+          </div>
+        </div>
+      </form>
+    </section>
+    <!--Bookmarks Section-->
+    <section id="bookmarks">
+      <h2>Bookmarks:</h2>
+      <!--Actions-->
+      <div class="group-row bookmarks-actions .js-action-bar">
+        <form class="js-select-all item">
+          <label for="select-all" class="hidden">Select all:</label>
+          <input type="checkbox" id="select-all" name="select-all" value="select-all">
+        </form>
+        <button class="delete-button js-delete-button item"><img src="../images/delete-button.svg"
+            alt="An image of a trash can that is a delete button for selected bookmarks." class="delete"></button>
+        <button class="create-button js-create-button item">New</button>
+        <!--new button hidden on new bookmark existing-->
+        <form class="filter item">
+          <label for="filter" class="hidden">Filter by:</label>
+          <select name="filter" id="filter">
+            <option id="label-option" selected disabled>Filter by:</option>
+            <option value="5">ooooo</option>
+            <option value="4">oooo</option>
+            <option value="3">ooo</option>
+            <option value="2">oo</option>
+            <option value="1">o</option>
+          </select>
+        </form>
+      </div>
+      <!--Bookmarks-->
+      <form class="select-bookmarks">
+        <div id="1" class="bookmark-wrapper js-bookmark">
+          <div class="bookmark-header group-row">
+            <div class="select-title group-row item">
+              <input type="checkbox" id="select-1" name="select" value="select-1">
+              <label for="select-1" class="hidden">Select bookmark: </label>
+              <h3>Title....................................................................................</h3>
+            </div>
+            <div class="preview item hidden">
+              <!---^div hidden on mobile or if title is too long-->
+              <p>
+                Description.......................................................................................................
+              </p>
+            </div>
+            <div class="star-edit-delete group-row item">
+              <div class="stars group-row">
+                <!--stars hidden on hover and edit-->
+                <button class="js-star-one item">
+                  <img src="../images/star-button.svg" alt="One star rating." class="star">
+                </button>
+                <button class="js-star-two item"><img src="../images/star-button.svg" alt="Two star rating."
+                    class="star"></button>
+                <button class="js-star-three item"><img src="../images/star-button.svg" alt="Three star rating."
+                    class="star"></button>
+                <button class="js-star-four item"><img src="../images/star-button.svg" alt="Four star rating."
+                    class="star"></button>
+                <button class="js-star-five item"><img src="../images/star-button.svg" alt="Five star rating."
+                    class="star"></button>
+              </div>
+              <button class="edit-button js-edit-button item"><img src="../images/edit-button.svg"
+                  alt="An image of a pencil that is an edit button to edit the bookmark." class="edit"></button>
+              <!--edit button appear on hover and not editting-->
+              <button class="delete-button js-delete-button item"><img src="../images/delete-button.svg"
+                  alt="An image of a trash can that deletes the bookmark." class="delete"></button>
+            </div>
+          </div>
+          <div class="bookmark-expanded">
+            <div class="visit-site group-row">
+              <a href="">Visit Site</a>
+              <p>(https://.com)</p>
+            </div>
+            <div class="description">
+              <p class="description">Description</p>
+            </div>
+            <div class="submit-cancel group-row">
+              <button class="edit-button js-edit-submit-button item"><img src="../images/edit-submit-button.svg"
+                  alt="An image of a checkmark that that submits edits made to the bookmark." class="edit"></button>
+              <!--edit submit button appear on edit-->
+              <button class="edit-button js-edit-cancel-button item"><img src="../images/edit-cancel-button.svg"
+                  alt="An image of an x that cancels edits made to the bookmark." class="edit"></button>
+              <!--edit submit button appear on edit-->
+              <button class="delete-button js-delete-button item"><img src="../images/delete-button.svg"
+                  alt="An image of a trash can that deletes the bookmark." class="delete"></button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+  </main>
+</body>
+
+</html>
