@@ -39,11 +39,11 @@ const generateButton = function (type, version) {
     let editAlt = '';
     let img = '';
     if (!parseType[1]) {
-      classes = 'class="edit-button js-edit-button item"';
+      classes = 'class="edit-button edit-start-button js-edit-button item"';
       editAlt = alt.edit;
       img = '../images/edit-button.svg';
     } else {
-      classes = `class="edit-button js-edit-${parseType[1]}-button item"`;
+      classes = `class="edit-button edit-${parseType[1]}-button js-edit-${parseType[1]}-button item"`;
       img = `../images/edit-${parseType[1]}-button.svg`;
       if (parseType[1] === 'submit') {
         if (version === 'bookmark') editAlt = alt.editSubmit;
@@ -66,16 +66,16 @@ const generateButton = function (type, version) {
     innerHTML = `<img src="../images/delete-button.svg" alt="${deleteAlt}" class="delete">`;
     // Create star button
   } else if (parseType[0] === 'star') {
-    let capitalizedStarNum = parseType[1].charAt(0).toUpperCase() + parseType[1].slice(1);
     let id = cuid();
     let wordToNum = { 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5 };
     // Do not use a regular button, instead use a radio button.
     return `
-      <div class="star-button js-star-${parseType[1]} ${version[0]} item">
-        <input type="radio" id="${type}-${id}" name="rating" value="${wordToNum[parseType[1]]}" 
-          ${version[1]}>
-        <label for="${type}-${id}" class="hidden"></label>
-        <img src="../images/star-button.svg" alt="${capitalizedStarNum} star rating." class="star">
+      <div class="star-button js-star-${parseType[1]} ${version[0]} item star">
+        <input type="radio" id="${type}-${id}" name="rating" class="hidden"
+          value="${wordToNum[parseType[1]]}" ${version[1]}>
+        <label for="${type}-${id}">
+          <span class="hidden">${parseType[1]} star rating.</span>
+        </label>
       </div>`;
     // Create 'New' button
   } else if (parseType[0] === 'new') {
@@ -93,7 +93,7 @@ const generateStarRating = function (rating) {
   ['star-one', 'star-two', 'star-three', 'star-four', 'star-five']
     .forEach((star, index) => {
       stars += generateButton(star,
-        [index < rating - 1 ? 'star-colored' : '', index === rating - 1 ? 'checked' : '']
+        [index < rating ? 'star-colored' : '', index === rating - 1 ? 'checked' : '']
       );
     });
 
@@ -139,7 +139,7 @@ const generateNewBookmarkHeader = function (id, title, rating) {
   if (title) savedTitle = `value="${title}"`;
 
   return `
-  <div class="bookmark-header group-row">
+  <div class="bookmark-header new-header group-row">
     <div class="title-text-box group-row">
       <label for="new-title-${id}">Title:</label>
       <input type="text" name="title" ${savedTitle} id="new-title-${id}" class="title item">
@@ -177,7 +177,7 @@ const generateNewBookmarksSection = function (newBookmarkData) {
     </section>`;
 };
 
-const generateActionsBar = function (newBookmarkExists) {
+const generateActionsBar = function (selectAll, newBookmarkExists) {
   let deleteButton = generateButton('delete', 'action-bar');
   let createButton = '';
   let marginLeft = '';
@@ -190,9 +190,10 @@ const generateActionsBar = function (newBookmarkExists) {
 
   return `
     <div class="group-row bookmarks-actions js-action-bar">
-      <form class="js-select-all item">
+      <form class="item">
         <label for="select-all" class="hidden">Select all:</label>
-        <input type="checkbox" id="select-all" name="select-all" value="select-all">
+        <input type="checkbox" id="select-all" name="select-all" value="select-all"
+          ${selectAll ? 'checked' : ''}>
       </form>
       ${deleteButton}
       ${createButton}
@@ -228,12 +229,9 @@ const generateBookmarkBody = function (url, desc) {
 };
 
 const generateEditBookmarkBody = function (id, url, desc) {
-  let descriptionValue = '';
   let editSubmitButton = generateButton('edit-submit', 'bookmark');
   let editCancelButton = generateButton('edit-cancel', 'bookmark');
   let deleteButton = generateButton('delete', 'bookmark');
-
-  if (desc) descriptionValue = `value="${desc}"`;
 
   return `
     <div class="bookmark-expanded">
@@ -245,7 +243,7 @@ const generateEditBookmarkBody = function (id, url, desc) {
       <div class="description group-row">
         <label for="desc-${id}" class="hidden">Enter a description:</label>
         <textarea id="desc-${id}" name="desc"
-          placeholder="You can enter a description here." ${descriptionValue}"></textarea>
+          placeholder="You can enter a description here.">${desc}</textarea>
       </div>
       <div class="submit-cancel group-row">
         ${editSubmitButton}
@@ -255,20 +253,16 @@ const generateEditBookmarkBody = function (id, url, desc) {
     </div>`;
 };
 
-const generateBookmarkHeader = function (id, title, desc, rating) {
+const generateBookmarkHeader = function (id, title, desc, rating, expanded, selected) {
   let stars = '';
   let preview = '';
   let hidePreview = '';
   let editButton = generateButton('edit');
   let deleteButton = generateButton('delete', 'bookmark');
 
-  if (!rating) {
-    stars = generateStarRating(0);
-  } else {
-    stars = generateStarRating(rating);
-  }
+  stars = generateStarRating(rating);
 
-  if (desc) {
+  if (desc && !expanded) {
     preview = desc.substring(0, 40);
   } else {
     hidePreview = 'hidden';
@@ -277,7 +271,8 @@ const generateBookmarkHeader = function (id, title, desc, rating) {
   return `
     <div class="bookmark-header active-header group-row">
       <div class="select-title group-row item">
-        <input type="checkbox" id="select-${id}" name="select" value="select-${id}">
+        <input type="checkbox" id="select-${id}" name="select" value="select-${id}"
+          ${selected ? 'checked' : ''}>
         <label for="select-${id}" class="hidden">Select bookmark: </label>
         <h3>${title}</h3>
       </div>
@@ -292,9 +287,8 @@ const generateBookmarkHeader = function (id, title, desc, rating) {
     </div>`;
 };
 
-const generateEditBookmarkHeader = function (id, title, rating) {
+const generateEditBookmarkHeader = function (id, title, rating, selected) {
   let stars = '';
-  console.log(title);
 
   if (!rating) {
     stars = generateStarRating(0);
@@ -303,9 +297,10 @@ const generateEditBookmarkHeader = function (id, title, rating) {
   }
 
   return `
-    <div class="bookmark-header group-row">
+    <div class="bookmark-header edit-header group-row">
       <div class="title-text-box group-row item">
-        <input type="checkbox" id="select-${id}" name="select" value="select-${id}">
+        <input type="checkbox" id="select-${id}" name="select" value="select-${id} 
+          ${selected ? 'checked' : ''}>
         <label for="select-${id}" class="hidden">Select bookmark: </label>
         <label for="title-${id}" class="hidden">Title:</label>
         <input type="text" name="title" id="title-${id}" value="${title}" class="title item">
@@ -316,22 +311,21 @@ const generateEditBookmarkHeader = function (id, title, rating) {
     </div>`;
 };
 
-const generateBookmark = function (id, title, url, desc, rating, expanded, edits) {
+const generateBookmark = function (id, title, url, desc, rating, expanded, edits, selected) {
   let header = '';
   let body = '';
 
   if (!Object.keys(edits).length) {
-    header = generateBookmarkHeader(id, title, desc, rating);
+    header = generateBookmarkHeader(id, title, desc, rating, expanded, selected);
     if (expanded) body = generateBookmarkBody(url, desc);
 
     return `
-      <div id="${id}" class="bookmark-wrapper js-bookmark">
+      <form id="${id}" class="bookmark-wrapper js-bookmark">
         ${header}
         ${body}
-      </div>`;
+      </form>`;
   } else {
-    console.log(edits.title + edits.url);
-    header = generateEditBookmarkHeader(id, edits.title, edits.rating);
+    header = generateEditBookmarkHeader(id, edits.title, edits.rating, selected);
     body = generateEditBookmarkBody(id, edits.url, edits.desc);
 
     return `
@@ -342,17 +336,18 @@ const generateBookmark = function (id, title, url, desc, rating, expanded, edits
   }
 };
 
-const generateBookmarksSection = function (bookmarkData, newBookmarkExists) {
-  let actionBar = generateActionsBar(newBookmarkExists);
+const generateBookmarksSection = function (bookmarkData, filter, selectAll, newBookmarkExists) {
+  let actionBar = generateActionsBar(selectAll, newBookmarkExists);
   let bookmarks = '';
   let hide = '';
-  console.log(bookmarkData);
+
   if (!newBookmarkExists) hide = 'class="hidden"';
 
   bookmarks = bookmarkData.reduce((string, bookmark) => {
-    console.log('book', bookmark);
-    string += generateBookmark(bookmark.id, bookmark.title, bookmark.url,
-      bookmark.desc, bookmark.rating, bookmark.expanded, bookmark.edits); return string;
+    if (bookmark.rating < filter) return string;
+    string += generateBookmark(bookmark.id, bookmark.title, bookmark.url, bookmark.desc, 
+      bookmark.rating, bookmark.expanded, bookmark.edits, bookmark.selected);
+    return string;
   }, '');
 
   return `
@@ -365,22 +360,35 @@ const generateBookmarksSection = function (bookmarkData, newBookmarkExists) {
     </section>`;
 };
 
+const generateErrorElement = function (error) {
+  return `
+    <aside class="error">
+      <h3>${error.message}<h3>
+    </aside>`;
+};
+
 /********** RENDER FUNCTION(S) **********/
 
 const render = function () {
-  let bookmarkData = store.bookmarks;
-  let newBookmarkData = store.adding;
+  let filter = store.getFilter();
+  let bookmarkData = store.getBookmarks();
+  let newBookmarkData = store.getAdding();
+  let selectAll = store.getSelectAll();
+  let error = store.getError();
   let bookmarksHTML = '';
   let newBookmarksHTML = '';
+  let errorHTML = '';
 
-  if (newBookmarkData.length) {
-    console.log('test', newBookmarkData);
+  if (newBookmarkData[0]) {
     newBookmarksHTML = generateNewBookmarksSection(newBookmarkData);
   }
 
-  bookmarksHTML = generateBookmarksSection(bookmarkData, !!(newBookmarkData.length));
+  console.log('render', error);
+  if (error && error.message) errorHTML = generateErrorElement(error);
 
-  $('main').html(newBookmarksHTML + bookmarksHTML);
+  bookmarksHTML = generateBookmarksSection(bookmarkData, filter, selectAll, !!(newBookmarkData[0]));
+
+  $('main').html(newBookmarksHTML + errorHTML + bookmarksHTML);
 };
 
 /********** EVENT HANDLER FUNCTIONS **********/
@@ -389,20 +397,22 @@ const render = function () {
  * Places an event listener on the select
  * all check box to select all bookmarks.
  */
-const handleToggleSelectAll = function () {
-  $('main').on('click', '.js-create-button', (event) => {
-
+const handleToggleSelectAllClick = function () {
+  $('main').on('click', '#select-all', () => {
+    store.toggleSelectAll();
+    render();
   });
 };
 
 /**
- * Places an event listener on the checkboxes
- * to select bookmarks. Unchecks on filter
- * and edit.
+ * Places an event listener on a bookmark's
+ * checkbox to select it.
  */
-const handleToggleSelectClick = function () {
-  $('main').on('click', '.js-create-button', (event) => {
-    event.stopPropagation();
+const handleToggleCheckboxClick = function () {
+  $('main').on('click', '.bookmark-header input[type="checkbox"]', (event) => {
+    let id = $(event.currentTarget).closest('.bookmark-header').attr('id');
+    store.toggleSelected(id);
+    render();
   });
 };
 
@@ -412,9 +422,31 @@ const handleToggleSelectClick = function () {
  * filter by.
  */
 const handleFilterSelectClick = function () {
-  $('main').on('click', '.js-create-button', (event) => {
-
+  $('main').on('change', '#filter', () => {
+    let filter = $('#filter').val();
+    store.setFilter(filter);
+    render();
   });
+};
+
+const setRating = function (id, type, classes) {
+  if (type.includes('active-header')) {
+    type = 'bookmark';
+  } else if (type.includes('new-header')) {
+    type = 'adding';
+  } else if (type.includes('edit-header')) {
+    type = 'edit';
+  } else {
+    throw new Error('Cannot find bookmark to submit.');
+  }
+
+  ['js-star-one', 'js-star-two', 'js-star-three', 'js-star-four', 'js-star-five']
+    .forEach((star, index) => {
+      if (classes && classes.includes(star)) {
+        store.setRating(id, type, index + 1);
+      }
+    });
+  render();
 };
 
 /** Places an event listener on the star
@@ -423,32 +455,11 @@ const handleFilterSelectClick = function () {
 const handleStarButtonClick = function () {
   $('main').on('click', '.js-star-one, .js-star-two, .js-star-three, .js-star-four, .js-star-five',
     (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      let classes = $(this.event.currentTarget).attr('class');
-      let id = $(this.event.currentTarget).closest('.bookmark-wrapper').attr('id');
-      let type = $(event.currentTarget).closest('.bookmark-wrapper').attr('class');
-      let bookmark = '';
+      let id = $(event.currentTarget).closest('.bookmark-wrapper').attr('id');
+      let type = $(event.currentTarget).closest('.bookmark-header').attr('class');
+      let classes = $(event.currentTarget).attr('class');
 
-      if (type.includes('js-bookmark')) {
-        type = 'bookmark';
-      } else if (type.includes('js-new-bookmark')) {
-        type = 'adding';
-      } else {
-        throw new Error('Cannot find bookmark to submit.');
-      }
-
-      bookmark = store.findById(id, type);
-
-      ['.js-star-one', '.js-star-two',
-        '.js-star-three', '.js-star-four',
-        '.js-star-five'].forEach((star, index) => {
-        if (classes && classes.includes(star)) {
-          bookmark.rating = index + 1;
-        }
-      });
-
-      render();
+      setRating(id, type, classes);
     });
 };
 
@@ -458,10 +469,8 @@ const handleStarButtonClick = function () {
  */
 const handleToggleExpand = function () {
   $('main').on('click', '.active-header', (event) => {
-    event.stopPropagation();
     let id = $(event.currentTarget).closest('.js-bookmark').attr('id');
     let bookmark = store.findById(id, 'bookmark');
-    console.log(bookmark);
     bookmark.expanded = !bookmark.expanded;
     render();
   });
@@ -491,7 +500,11 @@ const deleteBookmark = function (id) {
       store.findAndDelete(id, 'bookmark');
       render();
     })
-    .catch(error => console.log(error.message));
+    .catch(error => {
+      store.setError(error);
+      render();
+      store.resetError();
+    });
 };
 
 /**
@@ -529,7 +542,11 @@ const submitNewBookmark = function (tentativeId, data) {
       store.addBookmark(tentativeId, bookmark);
       render();
     })
-    .catch(error => console.log(error.message));
+    .catch(error => {
+      store.setError(error);
+      render();
+      store.resetError();
+    });
 };
 
 const convertFormToObject = function (form) {
@@ -540,24 +557,18 @@ const convertFormToObject = function (form) {
 };
 
 const submitEdits = function (id, json, data) {
-  let bookmark = store.findById(id, 'bookmark');
-  let changed = false;
   data = convertFormToObject(data);
-
-  for (const prop in data) {
-    //console.log(prop, data[prop]);
-    //console.log(prop, bookmark[prop]);
-    if (data[prop] !== bookmark[prop]) changed = true;
-  }
-
-  if (!changed) return;
 
   api.patchBookmark(id, json)
     .then(() => {
       store.findAndUpdate(id, data);
       render();
     })
-    .catch(error => console.log(error.message));
+    .catch(error => {
+      store.setError(error);
+      render();
+      store.resetError();
+    });
 };
 
 /**
@@ -639,10 +650,10 @@ const bindEventListeners = function () {
   handleDeleteButtonClick();
   handleDeleteSelectedClick();
   handleToggleExpand();
+  handleToggleCheckboxClick();
   handleStarButtonClick();
   handleFilterSelectClick();
-  handleToggleSelectClick();
-  handleToggleSelectAll();
+  handleToggleSelectAllClick();
 };
 
 export default {

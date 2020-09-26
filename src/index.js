@@ -7,13 +7,12 @@ import bookmarks from './bookmarks';
 import './index.css';
 
 const main = function () {
-  //error handling; is this request still need?---------------------
-  // ^ bind and add bookmarks.onload(api.getItems()) to bindeventlisteners instead
-  /**api.getItems()
+  api.getBookmarks()
     .then((data) => {
-      data.forEach((bookmark) => store.addBookmark(bookmark));
+      data.forEach((bookmark) => store.addBookmark('', bookmark));
       bookmarks.render();
-    });*/ //------want to run right away
+      store.resetError();
+    });
 
   bookmarks.bindEventListeners();
   bookmarks.render();
