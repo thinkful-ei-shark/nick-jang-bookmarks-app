@@ -1,3 +1,15 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  width: 85%;
+  margin: 0 auto;
+}
+
 h3 {
   font-size: 1em;
   margin: 0px;
@@ -9,6 +21,10 @@ p {
 
 textarea {
   resize: none;
+}
+
+button:hover {
+  cursor: pointer;
 }
 
 form.filter, .title-text-box label, .url label {
@@ -50,7 +66,7 @@ input.title {
   justify-content: space-between;
 }
 
-.stars button,
+.star-button,
 .delete-button,
 .edit-button {
   border: 0px;
@@ -58,7 +74,7 @@ input.title {
   height: fit-content;
 }
 
-.stars button,
+.star-button,
 .delete-button,
 .edit-button {
   max-width: 24px;
@@ -102,7 +118,10 @@ input.title {
   height: 24px;
 }
 
-.bookmarks-actions .create-button, .stars {
+.stars,
+.bookmarks-actions .create-button, 
+.active-header:hover .edit-button,
+.move-left {
   margin-left: auto;
 }
 
@@ -128,26 +147,22 @@ select:focus #label-option {
   display: none;
 }
 
-.bookmark-header .stars{
+#bookmarks .active-header .stars{
   display: flex;
 }
 
-.bookmark-header .edit-button,
-.bookmark-header .delete-button {
+#bookmarks .active-header .edit-button,
+#bookmarks .active-header .delete-button {
   display: none;
 }
 
-.bookmark-header:hover .stars{
+#bookmarks .active-header:hover .stars{
   display: none;
 }
 
-.bookmark-header:hover .edit-button,
-.bookmark-header:hover .delete-button {
+#bookmarks .active-header:hover .edit-button,
+#bookmarks .active-header:hover .delete-button {
   display: block;
-}
-
-.bookmark-header:hover .edit-button {
-  margin-left: auto;
 }
 
 #filter {

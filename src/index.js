@@ -3,7 +3,7 @@ import api from './api';
 import store from './store';
 import bookmarks from './bookmarks';
 
-import 'normalize.css'; //<---------where is this located?
+//import 'normalize.css'; //<---------where is this located?
 import './index.css';
 
 const main = function () {
@@ -13,7 +13,7 @@ const main = function () {
     .then((data) => {
       data.forEach((bookmark) => store.addBookmark(bookmark));
       bookmarks.render();
-    });*/
+    });*/ //------want to run right away
 
   bookmarks.bindEventListeners();
   bookmarks.render();
