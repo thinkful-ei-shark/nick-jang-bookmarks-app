@@ -113,7 +113,7 @@ const generateNewBookmarkBody = function (id, url, desc) {
   let submitButton = generateButton('edit-submit', 'new-bookmark');
   let cancelButton = generateButton('edit-cancel', 'new-bookmark');
 
-  if (url) savedURL = `value="${url}`;
+  if (url) savedURL = `value="${url}"`;
   if (desc) savedDescription = `value="${desc}"`;
 
   return `
@@ -166,7 +166,6 @@ const generateNewBookmark = function (id, title, url, desc, rating) {
 const generateNewBookmarksSection = function (newBookmarkData) {
   let newBookmarks = '';
   let createButton = generateButton('new');
-
   newBookmarks = newBookmarkData.reduce((elements, newBookmark) =>
     elements += generateNewBookmark(newBookmark.id, newBookmark.title,
       newBookmark.url, newBookmark.desc, newBookmark.rating), '');
@@ -257,32 +256,37 @@ const generateEditBookmarkBody = function (id, url, desc) {
     </div>`;
 };
 
+// Elements involving a preview description in the condensed view have been
+// commented out for the submission. One of the requirements seems to state
+// there should a title and rating only. These particular lines were commented
+// out as a precaution, as I was unsure if their inclusion would be undesirable.
 const generateBookmarkHeader = function (id, title, desc, rating, expanded, selected) {
   let stars = '';
-  let preview = '';
-  let hidePreview = '';
+  //let preview = '';
+  //let hidePreview = '';
   let editButton = generateButton('edit');
   let deleteButton = generateButton('delete', 'bookmark');
 
   stars = generateStarRating(rating);
 
+  /*
   if (desc && !expanded) {
     preview = desc.substring(0, 40);
   } else {
     hidePreview = 'hidden';
-  }
+  }*/
 
   return `
     <div class="bookmark-header active-header group-row">
       <div class="select-title group-row item">
-        <input type="checkbox" id="select-${id}" name="select" value="select-${id}"
-          ${selected ? 'checked' : ''}>
+        <input type="checkbox" id="select-${id}" name="select" ${selected ? 'checked' : ''}>
         <label for="select-${id}" class="hidden">Select bookmark: </label>
         <h3>${title}</h3>
-      </div>
-      <div class="preview item ${hidePreview}">
+      </div>` +
+      /**<div class="preview item ${hidePreview}">
         <p>${preview}</p>
-      </div>
+      </div>*/
+      `
       <div class="star-edit-delete group-row item">
         ${stars}
         ${editButton}
@@ -303,13 +307,12 @@ const generateEditBookmarkHeader = function (id, title, rating, selected) {
   return `
     <div class="bookmark-header edit-header group-row">
       <div class="title-text-box group-row item">
-        <input type="checkbox" id="select-${id}" name="select" value="select-${id} 
-          ${selected ? 'checked' : ''}>
+        <input type="checkbox" id="select-${id}" name="select" ${selected ? 'checked' : ''}>
         <label for="select-${id}" class="hidden">Select bookmark: </label>
         <label for="title-${id}" class="hidden">Title:</label>
         <input type="text" name="title" id="title-${id}" value="${title}" class="title item">
       </div>
-      <div class="star-edit-delete group-row item">
+      <div class="star-edit-delete group-row">
         ${stars}
       </div>
     </div>`;
@@ -333,7 +336,7 @@ const generateBookmark = function (id, title, url, desc, rating, expanded, edits
     body = generateEditBookmarkBody(id, edits.url, edits.desc);
 
     return `
-      <form id="${id}" class="bookmark-wrapper js-bookmark">
+      <form id="${id}" class="bookmark-wrapper js-bookmark js-edit-bookmark">
         ${header}
         ${body}
       </form>`;
@@ -349,7 +352,7 @@ const generateBookmarksSection = function (bookmarkData, filter, selectAll, newB
 
   bookmarks = bookmarkData.reduce((string, bookmark) => {
     if (bookmark.rating < filter) return string;
-    string += generateBookmark(bookmark.id, bookmark.title, bookmark.url, bookmark.desc, 
+    string += generateBookmark(bookmark.id, bookmark.title, bookmark.url, bookmark.desc,
       bookmark.rating, bookmark.expanded, bookmark.edits, bookmark.selected);
     return string;
   }, '');
@@ -371,7 +374,7 @@ const generateErrorElement = function (error) {
     </aside>`;
 };
 
-/********** RENDER FUNCTION(S) **********/
+/********** RENDER FUNCTION **********/
 
 const render = function () {
   let filter = store.getFilter();
@@ -387,7 +390,6 @@ const render = function () {
     newBookmarksHTML = generateNewBookmarksSection(newBookmarkData);
   }
 
-  console.log('render', error);
   if (error && error.message) errorHTML = generateErrorElement(error);
 
   bookmarksHTML = generateBookmarksSection(bookmarkData, filter, selectAll, !!(newBookmarkData[0]));
@@ -396,6 +398,36 @@ const render = function () {
 };
 
 /********** EVENT HANDLER FUNCTIONS **********/
+
+/**
+ * Saves editting and new bookmark data,
+ * so they are not lost on rerender.
+ */
+const handleTextInputKeyUp = function () {
+  $('main').on('keyup', 'textarea, input[type="text"]', (event) => {
+    let id = $(event.currentTarget).attr('id');
+    let bookmarkType = $(event.currentTarget).closest('.bookmark-wrapper').attr('class');
+    let bookmarkProperty = '';
+    let bookmarkId = '';
+
+    if (!id) throw new Error('Element id not found.');
+
+    if (bookmarkType.includes('js-edit-bookmark')) {
+      bookmarkType = 'edit';
+      bookmarkProperty = id.split('-')[0];
+      bookmarkId = id.split('-')[1];
+    } else if (bookmarkType.includes('js-new-bookmark')) {
+      bookmarkType = 'adding';
+      bookmarkProperty = id.split('-')[1];
+      bookmarkId = id.split('-')[2];
+    }
+
+    let update = { id: bookmarkId };
+    update[bookmarkProperty] = document.getElementById(id).value;
+
+    store.setTentativeData(update, bookmarkType);
+  });
+};
 
 /**
  * Places an event listener on the select
@@ -414,7 +446,8 @@ const handleToggleSelectAllClick = function () {
  */
 const handleToggleCheckboxClick = function () {
   $('main').on('click', '.bookmark-header input[type="checkbox"]', (event) => {
-    let id = $(event.currentTarget).closest('.bookmark-header').attr('id');
+    event.stopPropagation();
+    let id = $(event.currentTarget).closest('.bookmark-wrapper').attr('id');
     store.toggleSelected(id);
     render();
   });
@@ -474,8 +507,7 @@ const handleStarButtonClick = function () {
 const handleToggleExpand = function () {
   $('main').on('click', '.active-header', (event) => {
     let id = $(event.currentTarget).closest('.js-bookmark').attr('id');
-    let bookmark = store.findById(id, 'bookmark');
-    bookmark.expanded = !bookmark.expanded;
+    store.toggleExpand(id);
     render();
   });
 };
@@ -562,6 +594,11 @@ const convertFormToObject = function (form) {
 
 const submitEdits = function (id, json, data) {
   data = convertFormToObject(data);
+
+  // If selected, remove select key from json
+  json = json.split('"select":"on",');
+  if (json[1] && json[1].charAt(0) === ',') json[1].splice(1, 1);
+  json = json.join('');
 
   api.patchBookmark(id, json)
     .then(() => {
@@ -658,6 +695,7 @@ const bindEventListeners = function () {
   handleStarButtonClick();
   handleFilterSelectClick();
   handleToggleSelectAllClick();
+  handleTextInputKeyUp();
 };
 
 export default {

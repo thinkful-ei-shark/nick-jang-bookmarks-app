@@ -2,7 +2,7 @@ import cuid from 'cuid';
 
 let bookmarks = []; // {id: '', title: '', rating: 0, url: '', desc: '', expanded: false, selected: false, edits: {}}
 let adding = [];    // { Same as above without expanded and edits} Save adding data to rerender on changes to store
-let error = {code:'', message:''};     // Errors from API
+let error = { code: '', message: '' };     // Errors from API
 let filter = 0;       // Filter results by minimum rating
 let selectAll = false;
 
@@ -24,7 +24,7 @@ const addBookmark = function (tentativeId, bookmark) {
   bookmarks.push(bookmark);
 };
 
-const findAndUpdate = function (id, updates) {
+const findAndUpdate = function (id, type, updates) {
   let bookmark = findById(id, 'bookmark');
 
   toggleEditting(id);
@@ -37,6 +37,12 @@ const findAndDelete = function (id, type) {
   } else {
     adding = adding.filter(bookmark => bookmark.id !== id);
   }
+};
+
+const toggleExpand = function (id) {
+  let bookmark = findById(id, 'bookmark');
+
+  bookmark.expanded = !bookmark.expanded;
 };
 
 const toggleEditting = function (id) {
@@ -64,17 +70,24 @@ const toggleSelectAll = function () {
   bookmarks.forEach(bookmark => bookmark.selected = selectAll);
 };
 
-const saveTentativeData = function (type, data) {
-  let bookmark = findById(data.id, type);
+const setTentativeData = function (data, type) {
+  let found = false;
   if (type === 'adding') {
-    if (bookmark) {
-      Object.assign(bookmark, data);
-    } else {
-      adding.push(data);
-    }
-  } else if (type === 'bookmark') {
-    Object.assign(bookmark.edits, data);
+    adding.forEach((bookmark, index) => {
+      if (bookmark.id === data.id) {
+        Object.assign(adding[index], data);
+        found = true;
+      }
+    });
+  } else if (type === 'edit') {
+    bookmarks.forEach((bookmark, index) => {
+      if (bookmark.id === data.id) {
+        Object.assign(bookmarks[index].edits, data);
+        found = true;
+      }
+    });
   }
+  if (!found) throw new Error('Could not find bookmark.');
 };
 
 const addTentativeBookmark = function () {
@@ -86,15 +99,6 @@ const addTentativeBookmark = function () {
     desc: ''
   };
   adding.push(newBookmark);
-};
-
-const setError = function (e) {
-  Object.assign(error, e);
-};
-
-const resetError = function () {
-  error.code = '';
-  error.message = '';
 };
 
 const getBookmarks = function () {
@@ -117,6 +121,16 @@ const getSelectAll = function () {
   return selectAll;
 };
 
+const setBookmark = function (id, type, bookmark) {
+  if (type === 'bookmark') bookmarks.forEach((storeBookmark, index) => {
+    if (storeBookmark.id === id) bookmarks[index] = bookmark;
+  });
+
+  if (type === 'adding') adding.forEach((storeBookmark, index) => {
+    if (storeBookmark.id === id) bookmarks[index] = bookmark;
+  });
+};
+
 const setFilter = function (fil) {
   filter = fil;
 };
@@ -126,11 +140,20 @@ const setRating = function (id, headerType, rat) {
   if (headerType === 'edit') type = 'bookmark';
   let bookmark = findById(id, type);
 
-  if (headerType === 'edit') { 
-    bookmark.edits.rating = rat; 
+  if (headerType === 'edit') {
+    bookmark.edits.rating = rat;
   } else {
     bookmark.rating = rat;
   }
+};
+
+const setError = function (e) {
+  Object.assign(error, e);
+};
+
+const resetError = function () {
+  error.code = '';
+  error.message = '';
 };
 
 export default {
@@ -138,18 +161,20 @@ export default {
   addBookmark,
   findAndUpdate,
   findAndDelete,
+  toggleExpand,
   toggleEditting,
   toggleSelected,
   toggleSelectAll,
-  saveTentativeData,
+  setTentativeData,
   addTentativeBookmark,
-  setError,
-  resetError,
   getBookmarks,
   getAdding,
   getFilter,
   getError,
   getSelectAll,
+  setBookmark,
   setFilter,
   setRating,
+  setError,
+  resetError,
 };
