@@ -10,11 +10,13 @@ const main = function () {
     .then((data) => {
       data.forEach((bookmark) => store.addBookmark('', bookmark));
       bookmarks.render();
+      bookmarks.bindEventListeners();
+    })
+    .catch(error => {
+      store.setError(error);
+      bookmarks.render();
       store.resetError();
     });
-
-  bookmarks.bindEventListeners();
-  bookmarks.render();
 };
 
 $(main);

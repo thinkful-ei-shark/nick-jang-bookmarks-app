@@ -1,6 +1,8 @@
 # Bookmarks App
 
-A bookmark application to create, view, edit, and rate bookmarks. An exercise on asynchronous web applications.
+A bookmark application to create, edit, and delete bookmarks. Bookmarks have a title, link, description, and rating. An exercise on asynchronous web applications.
+
+Live site: thinkful-ei-shark.github.io/nick-jang-bookmarks-app/.
 
 ### User stories
   * Add bookmarks to my bookmark list. Bookmarks contain a title, url, description, and rating.

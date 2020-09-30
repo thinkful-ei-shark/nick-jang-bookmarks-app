@@ -30,21 +30,6 @@ const getBookmarks = function () {
 };
 
 const putBookmark = function (bookmark) {
-  //let error = '';
-  /**
-  if (!bookmark.title && !bookmark.url) {
-    error = 'Please include a title and url.';
-  } else if (!bookmark.title) {
-    error = 'Please include a title.';
-  } else if (!bookmark.url) {
-    error = 'Please include a url.';
-  }
-
-  if (error) return new Error(error);
-  **/
-
-  // api returns error
-
   const options = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

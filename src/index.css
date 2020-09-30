@@ -12,7 +12,8 @@ body {
 }
 
 h3 {
-  font-size: 1em;
+  color: white;
+  font-size: 1.1em;
   margin: 0px;
 }
 
@@ -20,8 +21,24 @@ p {
   margin: 0;
 }
 
+ul {
+  list-style-type: none;
+  padding: 0px;
+}
+
 textarea {
   resize: none;
+}
+
+hr {
+  width: 93%;
+  border: 1px solid skyblue;
+  border-radius: 3px;
+}
+
+.error h3 {
+  margin: 30px 0px 0px 20px;
+  color: blue;
 }
 
 button:hover {
@@ -32,8 +49,22 @@ form.filter, .title-text-box label, .url label {
   margin-top: auto;
 }
 
+form.filter {
+  margin-bottom: 5px;
+}
+
 input.title {
   width: 100%;
+  height: 28px;
+  background-color: lightskyblue;
+  border: 1px solid white;
+  border-radius: 3px;
+  padding: 8px 12px;
+  font-size: 1.1em;
+}
+
+.title-text-box {
+  margin: 3px 4px;
 }
 
 .group-row {
@@ -46,11 +77,13 @@ input.title {
 }
 
 .bookmark-wrapper {
-  border: 1px solid blue;
+  border: 1px solid skyblue;
+  margin-top: 1px;
+  border-radius: 3px;
 }
 
 .bookmark-header {
-  background-color: skyblue;
+  margin-left: 33px;
   flex-direction: column;
   align-items: center;
 }
@@ -60,18 +93,207 @@ input.title {
 }
 
 .description {
-  height: 100px;
+  height: 70px;
   overflow: auto;
 }
 
 p.description {
   white-space: pre-line;
+  margin-left: 14px;
+
+}
+
+p.preview {
+  color:white;
+  align-items: center;
+  font-style: italic;
+}
+
+ul {
+  margin: 0px;
+}
+
+.active-header h3 {
+  margin-left: -40px;
+  font-weight: 200px;
+}
+
+/*Circle check box*/
+.select-style {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+input[name="select"] {
+  cursor: pointer;
+  position: absolute;
+  opacity: 0;
+  top: 2px;
+  left: 7px;
+  height: 22px;
+  width: 22px;
+  z-index: 1;
+}
+
+.checkcircle {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  height: 22px;
+  width: 22px;
+  background-color: skyblue;
+  border: 1px solid white;
+  margin-left: 4px;
+  border-radius: 100%;
+}
+
+.select-style:hover input ~ .checkcircle {
+  background-color: #2196F3;
+  border-color: #2196F3;
+  transition: 0.12s;
+}
+
+.select-style input:focus ~ .checkcircle {
+  outline: black solid 1px;
+}
+
+.select-style input:checked ~ .checkcircle {
+  background-color: white;
+  border-color: white;
+  transition: 0.3s
+}
+
+.checkcircle:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.select-style input:checked ~ .checkcircle:after {
+  display: block;
+}
+
+.select-style .checkcircle:after {
+  left: 7px;
+  top: 4px;
+  width: 4px;
+  height: 8px;
+  border: solid skyblue;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(35deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+/*Square checkbox*/
+.select-style {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+input[name="select-all"] {
+  cursor: pointer;
+  position: absolute;
+  opacity: 0;
+  top: 7px;
+  left: 12px;
+  height: 17px;
+  width: 17px;
+  z-index: 1;
+}
+
+.check-all {
+  position: absolute;
+  top: 7px;
+  left: 9px;
+  height: 17px;
+  width: 17px;
+  background-color: white;
+  border: 1px solid skyblue;
+  margin-left: 4px;
+  border-radius: 3px;
+}
+
+.select-style:hover input ~ .check-all {
+  background-color: #2196F3;
+  border-color: #2196F3;
+  transition: 0.12s;
+}
+
+.select-style input:focus ~ .check-all {
+  outline: black solid 1px;
+}
+
+.select-style input:checked ~ .check-all {
+  background-color: white;
+  border-color: skyblue;
+  transition: 0.3s
+}
+
+.check-all:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.select-style input:checked ~ .check-all:after {
+  display: block;
+}
+
+.select-style .check-all:after {
+  left: 5px;
+  top: 2px;
+  width: 3px;
+  height: 7px;
+  border: solid skyblue;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(35deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.header-wrapper, .new-header {
+  background-color: skyblue;
+  padding: 3px;
+}
+
+.bookmark-expanded {
+  height: 133px;
+}
+
+.new-header {
+  padding: 0px;
+  margin: 0px;
+  height: 34px;
+}
+
+.new-header .title-text-box {
+  margin: 0px 8px 0px 4px;
+}
+
+.new-header input[type="text"],
+.edit-header input[type="text"] {
+  color:white;
+}
+
+.new-header input[type="text"]::placeholder {
+  color: white;
 }
 
 .stars {
   justify-content: space-between;
 }
 
+.star-regular,
 .star-button,
 .delete-button,
 .edit-button {
@@ -81,11 +303,12 @@ p.description {
   background-color: transparent;
 }
 
+.star-regular,
 .star-button,
 .delete-button,
 .edit-button {
-  max-width: 24px;
-  max-height: 24px;
+  max-width: 30px;
+  max-height: 30px;
 }
 
 .create-button,
@@ -93,18 +316,46 @@ p.description {
   align-self: flex-end;
   height: fit-content;
   max-width: fit-content;
-  height: 24px;
+  height: 27px;
+  margin-bottom: 5px;
+}
+
+.create-button {
+  background-color: white;
+  color: skyblue;
+  border: 1px skyblue solid;
+  padding: 3px 12px;
+  border-radius: 3px;
+  margin-right: 7px;
+  transition: 0.1s;
+}
+
+.create-button:hover {
+  background-color: skyblue;
+  color: white;
+  border: 1px skyblue solid;
+}
+
+.create-button:active {
+  background-color: blue;
+  color: white;
+  border: 1px blue solid;
 }
 
 .submit-cancel {
+  margin-bottom: 1px;
   justify-content: flex-end;
 }
 
 .star,
 .edit,
 .delete {
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
+}
+
+.bookmarks-actions .delete-button {
+  margin-left: 40px;
 }
 
 .star-edit-delete {
@@ -114,6 +365,20 @@ p.description {
 
 .filter {
   text-align: right;
+  margin-right: 7px;
+}
+
+.yellow-filter,
+.white-filter {
+  background-color: skyblue;
+}
+
+.yellow-filter {
+  color: yellow;
+}
+
+.white-filter {
+  color: white;
 }
 
 .select-title {
@@ -122,18 +387,59 @@ p.description {
 
 .title-text-box {
   width: 100%;
-  height: 24px;
+  height: 28px;
 }
 
 .stars,
-.bookmarks-actions .create-button, 
-.active-header:hover .edit-button,
+.bookmarks-actions .create-button,
 .move-left {
   margin-left: auto;
 }
 
 .url input, .description textarea {
+  font-size: 1em;
   width: 100%;
+  padding: 4px 12px;
+  margin: 4px 4px 0px 4px;
+  border: 1px solid skyblue;
+  border-radius: 3px;
+}
+
+.url input {
+  margin-bottom: 0px;
+}
+
+.visit-site {
+  margin-top: 7px;
+  align-items: center;
+}
+
+.visit-site a:link {
+  font-size: 1.15em;
+  margin: 4px 0px 4px 12px;
+  text-decoration: none;
+  font-weight: 500;
+  font-style: italic;
+  color: blue;
+}
+
+.visit-site a:visited {
+  color: purple;
+}
+
+.visit-site a:hover {
+  color: lightblue;
+}
+
+.visit-site a:active {
+  color: darkblue;
+}
+
+.visit-site p {
+  font-size: 0.95em;
+  margin: 7px 0px 4px 4px;
+  font-weight: 100;
+  font-style: italic;
 }
 
 .bookmarks-actions form:first-child,
@@ -146,6 +452,7 @@ p.description {
   text-align: center;
   height: 24px;
   display: none;
+  margin: auto;
 }
 
 .star {
@@ -156,11 +463,22 @@ p.description {
   background-image: url(../images/star-select-button.svg);
 }
 
-.star:hover {
+.js-edit-bookmark .star:hover,
+.js-new-bookmark .star:hover,
+.edit-start-button:hover,
+.edit-submit-button:hover,
+.edit-cancel-button:hover,
+.delete-button:hover {
+  transition: 0.12s;
+}
+
+.js-edit-bookmark .star:hover,
+.js-new-bookmark .star:hover {
   background-image: url(../images/star-hover-button.svg);
 }
 
-.star:active {
+.js-edit-bookmark .star:active,
+.js-new-bookmark .star:active {
   background-image: url(../images/star-active-button.svg);
 }
 
@@ -208,32 +526,21 @@ select:focus #label-option {
   display: flex;
 }
 
-#bookmarks .active-header .edit-button,
-#bookmarks .active-header .delete-button {
-  display: none;
-}
-
-#bookmarks .active-header:hover .stars{
-  display: none;
-}
-
-#bookmarks .active-header:hover .edit-button,
-#bookmarks .active-header:hover .delete-button {
-  display: block;
-}
-
 #filter {
-  height: 24px;
+  height: 27px;
+  border: 1px solid skyblue;
+  border-radius: 3px;
+  color: skyblue;
 }
 
 @media all and (min-width: 400px) {
   .bookmark-header {
     flex-direction: row;
-    align-items: flex-start;
   }
 
-  .description {
-    height: 50px;
+  .active-header h3 {
+    margin-left: 8px;
+    font-weight: 200px;
   }
 }
 

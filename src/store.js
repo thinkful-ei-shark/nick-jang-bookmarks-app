@@ -2,8 +2,8 @@ import cuid from 'cuid';
 
 let bookmarks = []; // {id: '', title: '', rating: 0, url: '', desc: '', expanded: false, selected: false, edits: {}}
 let adding = [];    // { Same as above without expanded and edits} Save adding data to rerender on changes to store
-let error = { code: '', message: '' };     // Errors from API
-let filter = 0;       // Filter results by minimum rating
+let error = { code: '', message: '' }; // Errors from API
+let filter = 0;     // Filter results by minimum rating
 let selectAll = false;
 
 const findById = function (id, type) {
@@ -24,7 +24,7 @@ const addBookmark = function (tentativeId, bookmark) {
   bookmarks.push(bookmark);
 };
 
-const findAndUpdate = function (id, type, updates) {
+const findAndUpdate = function (id, updates) {
   let bookmark = findById(id, 'bookmark');
 
   toggleEditting(id);
@@ -113,10 +113,6 @@ const getFilter = function () {
   return filter;
 };
 
-const getError = function () {
-  return error;
-};
-
 const getSelectAll = function () {
   return selectAll;
 };
@@ -148,7 +144,15 @@ const setRating = function (id, headerType, rat) {
 };
 
 const setError = function (e) {
-  Object.assign(error, e);
+  if (!e.code) {
+    error.message = e;
+  } else {
+    Object.assign(error, e);
+  }
+};
+
+const getError = function () {
+  return error;
 };
 
 const resetError = function () {
