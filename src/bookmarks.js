@@ -143,11 +143,13 @@ const generateNewBookmarkHeader = function (id, title, rating) {
 
   return `
   <div class="bookmark-header new-header group-row">
-    <div class="title-text-box group-row">
+    <div class="title-text-box group-row item">
       <input type="text" name="title" ${savedTitle} id="new-title-${id}" class="title item"
         aria-label="Enter a title: " placeholder="Enter a title here.">
     </div>
-    ${stars}
+    <div class="new-header-stars group-row item">
+      ${stars}
+    </div>
   </div>`;
 };
 
@@ -227,7 +229,7 @@ const generateBookmarkBody = function (url, desc) {
   return `
     <div class="bookmark-expanded">
       <div class="visit-site group-row">
-        <a href="${url}">Visit Site</a>
+        <a href="${url}" target="_blank">Visit Site</a>
         <p>${url}</p>
       </div>
       <hr />
